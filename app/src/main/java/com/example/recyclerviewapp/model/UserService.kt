@@ -5,10 +5,10 @@ import com.github.javafaker.Faker
 class UserService : UserClickListener {
 
     private var generatedPersons: MutableList<Person> = mutableListOf()
-    fun returnPersons(): List<Person> {
+    fun generatePersons(): MutableList<Person> {
         val faker = Faker.instance()
         IMAGES.shuffle()
-        generatedPersons = (1..50).map {
+        generatedPersons = (1..20).map {
             Person(
                 it,
                 faker.name().name(),
@@ -17,6 +17,11 @@ class UserService : UserClickListener {
         }.toMutableList()
         return generatedPersons
     }
+
+    override fun returnList(): MutableList<Person> {
+        return generatedPersons
+    }
+
 
     companion object {
         private val IMAGES = mutableListOf(
@@ -40,6 +45,7 @@ class UserService : UserClickListener {
 
 interface UserClickListener {
     fun removeUser(person: Person)
+    fun returnList(): MutableList<Person>
 }
 
 

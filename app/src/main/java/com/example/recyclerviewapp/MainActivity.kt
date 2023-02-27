@@ -3,6 +3,8 @@ package com.example.recyclerviewapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recyclerviewapp.adapter.ClickListener
+import com.example.recyclerviewapp.adapter.PersonAdapter
 import com.example.recyclerviewapp.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 

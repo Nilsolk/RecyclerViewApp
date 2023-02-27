@@ -1,10 +1,13 @@
-package com.example.recyclerviewapp
+package com.example.recyclerviewapp.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.recyclerviewapp.R
 import com.example.recyclerviewapp.databinding.ItemPersonBinding
 import com.example.recyclerviewapp.model.Person
 import com.example.recyclerviewapp.model.UserService
@@ -14,7 +17,7 @@ class PersonAdapter(
 ) :
     RecyclerView.Adapter<PersonViewHolder>() {
     private val userService = UserService()
-    private val users = userService.returnPersons()
+    private var persons = userService.generatePersons()
 
     private val onClickListener = OnClickListener.Base()
 
@@ -23,16 +26,32 @@ class PersonAdapter(
         return PersonViewHolder(binding)
     }
 
-    override fun getItemCount() = users.size
+    override fun getItemCount() = persons.size
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        val person = users[position]
+        val person = persons[position]
+        Log.d("bindvalue", persons.size.toString())
+
         holder.onBind(person)
 
         onClickListener.onViewClickListener(holder, clickListener, person)
 
         val moreButton = holder.itemView.findViewById<ImageView>(R.id.more_button)
-        onClickListener.onMoreClickListener(moreButton, person, userService, this)
+        //onClickListener.onDeleteClickListener(moreButton, person, userService, this, persons)
+
+
+        moreButton.setOnClickListener {
+            val oldValue = persons
+            Log.d("oldvalue", oldValue.size.toString())
+            userService.removeUser(person)
+            Log.d("newvalue", persons.size.toString())
+            val diffUtilsCallback = DiffUtilsCallback(oldValue, persons)
+            val diff = DiffUtil.calculateDiff(diffUtilsCallback)
+
+            diff.dispatchUpdatesTo(this)
+
+
+        }
     }
 
 }
@@ -60,11 +79,12 @@ class PersonViewHolder(private val binding: ItemPersonBinding) :
 
 interface OnClickListener {
     fun onViewClickListener(view: PersonViewHolder, callback: ClickListener, person: Person)
-    fun onMoreClickListener(
+    fun onDeleteClickListener(
         view: ImageView,
         person: Person,
         userService: UserService,
-        adapter: PersonAdapter
+        adapter: PersonAdapter,
+        persons: MutableList<Person>
     )
 
     class Base : OnClickListener {
@@ -78,16 +98,15 @@ interface OnClickListener {
             }
         }
 
-        override fun onMoreClickListener(
+        override fun onDeleteClickListener(
             view: ImageView,
             person: Person,
             userService: UserService,
             adapter: PersonAdapter,
+            persons: MutableList<Person>
         ) {
             view.setOnClickListener {
                 userService.removeUser(person)
-                adapter.notifyDataSetChanged()
-
             }
 
         }
