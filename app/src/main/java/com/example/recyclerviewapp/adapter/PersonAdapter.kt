@@ -12,13 +12,12 @@ import com.example.recyclerviewapp.model.Person
 import com.example.recyclerviewapp.model.UserService
 
 class PersonAdapter(
-    private val clickListener: ClickListener
+    clickListener: ClickListener
 ) :
     RecyclerView.Adapter<PersonViewHolder>() {
     private val userService = App().userService
     private var persons = userService.generatePersons()
     private val onClickListener = OnClickListener.Base(clickListener)
-
 
     fun setData(newList: MutableList<Person>) {
         persons.clear()

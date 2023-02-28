@@ -18,4 +18,5 @@ class DiffUtilsCallback(private val oldList: List<Person>, private val newList: 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
+
 }
