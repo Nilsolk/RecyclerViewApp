@@ -2,10 +2,10 @@ package com.example.recyclerviewapp.model
 
 import com.github.javafaker.Faker
 
-class UserService : UserClickListener {
+class UserService : PersonGenerator {
 
     private var generatedPersons: MutableList<Person> = mutableListOf()
-    fun generatePersons(): MutableList<Person> {
+    override fun generatePersons(): MutableList<Person> {
         val faker = Faker.instance()
         IMAGES.shuffle()
         generatedPersons = (1..20).map {
@@ -38,13 +38,10 @@ class UserService : UserClickListener {
         )
     }
 
-    override fun removeUser(person: Person) {
-        generatedPersons.remove(person)
-    }
 }
 
-interface UserClickListener {
-    fun removeUser(person: Person)
+interface PersonGenerator {
+    fun generatePersons(): MutableList<Person>
     fun returnList(): MutableList<Person>
 }
 
